@@ -23,15 +23,14 @@ public class PickUpResourceState : BaseState, IEnterablePayloadState<Resource>, 
 
     public void Update()
     {
-        if (Vector3.Distance(Unit.transform.position, TargetResource.transform.position) <= _interactDistance)
+        if (IsTargetReached(TargetResource.transform.position, _interactDistance))
         {
             PickUp();
             StateMachine.ChangeState<DropOffResourceState, Resource>(TargetResource);
             return;
         }
 
-        Unit.transform.position = Vector3.MoveTowards(Unit.transform.position, TargetResource.transform.position, _speed * Time.deltaTime);
-        Unit.transform.LookAt(TargetResource.transform);
+        Move(TargetResource.transform.position, _speed);
     }
 
     private void PickUp()

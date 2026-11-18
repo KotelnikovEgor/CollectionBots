@@ -27,14 +27,6 @@ public class ResourceSpawner : MonoBehaviour
         StartCoroutine(SpawnCoroutine());
     }
 
-    /*public void ReleaseResource(Resource prefab, Resource instance)
-    {
-        if (_pools.TryGetValue(prefab, out var pool))
-        {
-            pool.Release(instance);
-        }
-    }*/
-
     private void InstantiatePools()
     {
         _pools = new Dictionary<Resource, ObjectPool<Resource>>();
@@ -44,18 +36,24 @@ public class ResourceSpawner : MonoBehaviour
             Resource prefab = resourcePrefab;
 
             _pools[prefab] = new ObjectPool<Resource>(
-                createFunc: () => Instantiate(prefab),
-                actionOnGet: (resource) => 
-                {
+                createFunc: () => {
+                    Resource instance = Instantiate(prefab);
+                    instance.Collected += _pools[prefab].Release;
+                    return instance;
+                },
+                actionOnGet: (resource) => {
                     _activeCount++;
                     resource.gameObject.SetActive(true);
                 },
-                actionOnRelease: (resource) => 
-                {
+                actionOnRelease: (resource) => {
                     _activeCount--;
+                    resource.transform.SetParent(null);
                     resource.gameObject.SetActive(false);
                 },
-                actionOnDestroy: (resource) => Destroy(resource.gameObject),
+                actionOnDestroy: (resource) => {
+                    resource.Collected -= _pools[prefab].Release;
+                    Destroy(resource.gameObject); 
+                },
                 collectionCheck: true,
                 defaultCapacity: 10,
                 maxSize: _maxActive

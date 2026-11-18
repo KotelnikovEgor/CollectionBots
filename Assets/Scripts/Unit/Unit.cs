@@ -9,6 +9,7 @@ public class Unit : MonoBehaviour
     private IStateMachineUpdater _stateMachine;
 
     public event Action<Resource> TargetAcquired;
+    public event Action<BuildOrderPayload> BuildCommandReceived;
 
     private void Update()
     {
@@ -26,5 +27,11 @@ public class Unit : MonoBehaviour
     public void CollectResource(Resource resource)
     {
         TargetAcquired?.Invoke(resource);
+    }
+
+    public void BuildBase(Vector3 position, BaseFactory baseFactory)
+    {
+        BuildOrderPayload order = new(position, baseFactory, _base);
+        BuildCommandReceived?.Invoke(order);
     }
 }

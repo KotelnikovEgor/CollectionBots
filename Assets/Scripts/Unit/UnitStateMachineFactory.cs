@@ -22,7 +22,8 @@ public class UnitStateMachineFactory
         {
             new IdleState(stateMachine, _unit),
             new PickUpResourceState(stateMachine, _unit, _holdPoint),
-            new DropOffResourceState(stateMachine, _unit, _base)
+            new DropOffResourceState(stateMachine, _unit, _base),
+            new BuildBaseState(stateMachine, _unit)
         };
 
         stateMachine.Initialize(states);

@@ -11,26 +11,26 @@ public class CollectedResources : MonoBehaviour
 
     private void OnEnable()
     {
-        _warehouse.ResourceCountChanged += UpdateResourceText;
+        _warehouse.ResourceAmountChanged += UpdateResourceText;
     }
 
     private void OnDisable()
     {
-        _warehouse.ResourceCountChanged -= UpdateResourceText;
+        _warehouse.ResourceAmountChanged -= UpdateResourceText;
     }
 
-    private void UpdateResourceText(ResourceType type, int count)
+    private void UpdateResourceText(ResourceType type, int amount)
     {
         switch (type)
         {
             case ResourceType.Black:
-                _BlackResourceText.text = count.ToString();
+                _BlackResourceText.text = amount.ToString();
                 break;
             case ResourceType.Red:
-                _RedResourceText.text = count.ToString();
+                _RedResourceText.text = amount.ToString();
                 break;
             case ResourceType.White:
-                _WhiteResourceText.text = count.ToString();
+                _WhiteResourceText.text = amount.ToString();
                 break;
         }
     }

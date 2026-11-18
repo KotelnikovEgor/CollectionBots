@@ -39,9 +39,6 @@ public class Scanner : MonoBehaviour
         List<Resource> foundResources = new();
         Collider[] hits = Physics.OverlapBox(transform.position, _area, Quaternion.identity, _resourceLayer);
 
-        if (hits.Length > 0)
-            ResourceFinded?.Invoke();
-
         foreach (Collider hit in hits)
         {
             if (hit.TryGetComponent(out Resource resource))
@@ -51,5 +48,8 @@ public class Scanner : MonoBehaviour
         }
 
         _resourceRegistry.RegisterScannedResources(foundResources);
+
+        if (foundResources.Count > 0)
+            ResourceFinded?.Invoke();
     }
 }

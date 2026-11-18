@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class DropOffResourceState : BaseState, IEnterablePayloadState<Resource>, IUpdateState
 {
     private readonly Base _base;
@@ -23,19 +21,19 @@ public class DropOffResourceState : BaseState, IEnterablePayloadState<Resource>,
 
     public void Update()
     {
-        if (Vector3.Distance(Unit.transform.position, _base.transform.position) <= _interactDistance)
+        if (IsTargetReached(_base.transform.position, _interactDistance))
         {
-            DropOff();
+            Resource deliveredResource = TargetResource;
             StateMachine.ChangeState<IdleState>();
+            DropOff(deliveredResource);
             return;
         }
 
-        Unit.transform.position = Vector3.MoveTowards(Unit.transform.position, _base.transform.position, _speed * Time.deltaTime);
-        Unit.transform.LookAt(_base.transform);
+        Move(_base.transform.position, _speed);
     }
 
-    private void DropOff()
+    private void DropOff(Resource resource)
     {
-        _base.GetResource(Unit, TargetResource);
+        _base.GetResource(Unit, resource);
     }
 }
